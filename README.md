@@ -1,6 +1,6 @@
 # Known Language Documentation
 **File extension:** `.KnLAN`  
-**Run with:** `known_transpiler yourscript.convo`
+**Run with:** `known` in Powershel/Terminal/CMD
 
 ---
 
