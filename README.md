@@ -1,4 +1,4 @@
-# Known Language — Documentation
+# Known Language Documentation
 **File extension:** `.KnLAN`  
 **Run with:** `known_transpiler yourscript.convo`
 
@@ -66,11 +66,11 @@ take 1 from health
 ## Booleans
 
 ```
-set running to true
-set done to false
+set running to True
+set done to False
 ```
 
-Check if true or false in conditions:
+Check if True or False in conditions:
 
 ```
 if running is true:
@@ -89,7 +89,7 @@ set name to button_press "What is your name? "
 set name to uppercase of name
 ```
 
-`uppercase of` strips whitespace and makes the value all caps — useful for comparing inputs.
+`uppercase of` strips whitespace and makes the value all caps. Useful for comparing inputs.
 
 ---
 
@@ -189,7 +189,7 @@ call game_loop
 
 ## Quick Reference Card
 
-| Conversation | Python |
+| Known Programming Language | Python |
 |---|---|
 | `say "hello"` | `print("hello")` |
 | `-- comment` | `# comment` |
@@ -200,8 +200,8 @@ call game_loop
 | `make global x, y` | `global x, y` |
 | `set x to button_press "prompt"` | `x = input("prompt")` |
 | `set x to uppercase of y` | `x = y.strip().upper()` |
-| `x is true` | `x` |
-| `x is false` | `not x` |
+| `x is True` | `x` |
+| `x is False` | `not x` |
 | `if x > 5:` | `if x > 5:` |
 | `else if x == 5:` | `elif x == 5:` |
 | `else:` | `else:` |
@@ -213,4 +213,6 @@ call game_loop
 
 ---
 
-*Known Language — Starveil Game Studios*
+*Known Programming Language - Starveil Game Studios*
+
+IMPORTANT!! As of adding this file, only 'say', 'set', comments, and if/otherwise/else statements exist in the actual language.
