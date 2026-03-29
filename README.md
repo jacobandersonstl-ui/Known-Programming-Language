@@ -4,6 +4,10 @@
 
 ---
 
+I got the idea for the Known Programming Language after watching a YouTube video by AstroSam about how he made the programming language Z-Sharp. I was inspired and wanted to make a programming language of my own! Note that in the versions before ~Beta 1 or so, there will be code written by Claude AI because with my level of experience in programming, I do not have the skill to achieve something like this on my own. Do not fret, however! The amount of AI code in these versions is so minimal, that most of the code people would call AI is only like that because I learned to code from ChatGPT. Seriously, that's how I learned Python. Getting off track, this documentation outlines the syntax of Known. That''s it. Sorry for there not being any error support, I'm not that far into development yet. Good Luck!
+
+---
+
 ## Output
 
 ```
