@@ -3,92 +3,106 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import tkinter as tk
 from tkinter import filedialog
+import sys
+from lexer import tokenize, Token, KEYWORD, IDENTIFIER, STRING, NUMBER, OPERATOR
+from parser import Parser, SetNode, SayNode, IfNode, InputNode, OtherwiseNode, ElseNode, WhileNode
+
+def execute(node):
+    if isinstance(node, SetNode):
+        environment[node.name] = node.value
+    elif isinstance(node, SayNode):
+        value = environment.get(node.value, node.value)
+        print(value)
+    elif isinstance(node, InputNode):
+        environment[node.name] = input(node.prompt)
 
 def interpret(line):
-    words = line.split()
-    if not words:
+    tokens = tokenize(line.strip())
+    if not tokens:
         return
-
-    if words[0] == "set":
-        if words[3] == "button_press":
-            prompt = line.split("button_press", 1)[1].strip().strip('"')
-            environment[words[1]] = input(prompt)
-        else:
-            value = line.split("to", 1)[1].strip().strip('"')
-            environment[words[1]] = value
-    elif words[0] == "say":
-        say_value = line.split("say", 1)[1].strip()
-        if say_value.startswith('"'):
-            print(say_value.strip('"'))
-        elif say_value in environment:
-            print(environment[say_value])
-        else:
-            print(f"Error! '{say_value}' has not been set!")
-    elif words[0] == "--":
-        return
+    parser = Parser(tokens)
+    node = parser.parse()
+    if node:
+        execute(node)
     
-def evaluate_condition(words):
-    left = environment.get(words[1], words[1])
-    right = environment.get(words[3], words[3].rstrip(':').strip('"'))
-    op = words[2]
+def evaluate_condition_node(node):
+    left_raw, op, right_raw = node.condition
+    left = environment.get(left_raw, left_raw)
+    right = environment.get(right_raw, right_raw)
     if op in ("is", "=="):
         return left == right
     elif op == "!=":
         return left != right
     elif op == ">":
-        return left > right
+        return float(left) > float(right)
     elif op == "<":
-        return left < right
+        return float(left) < float(right)
     elif op == ">=":
-        return left >= right
+        return float(left) >= float(right)
     elif op == "<=":
-        return left <= right
+        return float(left) <= float(right)
     return False
+
+def get_indent_level(line):
+    return len(line) - len(line.lstrip("\t"))
 
 def run(filepath):
     with open(filepath, "r") as f:
         lines = f.readlines()
     
     inside_if = False
+    if_indent = 0
     condition_true = False
     any_true = False
+
  
     for line in lines:
-        words = line.split()
-        if not words:
+        tokens = tokenize(line.strip())
+        if not tokens:
             continue
+
+        parser = Parser(tokens)
+        node = parser.parse()
  
-        if words[0] == "if":
+        if isinstance(node, IfNode):
             inside_if = True
+            if_indent = get_indent_level(line)
             any_true = False
-            condition_true = evaluate_condition(words)
+            condition_true = evaluate_condition_node(node)
             if condition_true:
                 any_true = True
- 
-        elif words[0] == "otherwise":
+        
+        elif isinstance(node, OtherwiseNode):
             if inside_if and not any_true:
-                condition_true = evaluate_condition(words)
+                condition_true = evaluate_condition_node(node)
                 if condition_true:
                     any_true = True
             else:
                 condition_true = False
- 
-        elif words[0] == "else:":
+
+        elif isinstance(node, ElseNode):
             if inside_if and not any_true:
                 condition_true = True
                 any_true = True
             else:
                 condition_true = False
- 
-        elif line.startswith("\t") and inside_if:
-            if condition_true:
-                interpret(line)
- 
+        
+        elif inside_if:
+            indent = get_indent_level(line)
+
+            if indent > if_indent:
+                if condition_true:
+                    interpret(line)
+            
+            else:
+                inside_if = False
+                condition_true = False
+                any_true = False
+                if not isinstance(node, (IfNode, OtherwiseNode, ElseNode)):
+                    execute(node)
+
         else:
-            inside_if = False
-            condition_true = False
-            any_true = False
-            interpret(line)
+            execute(node)
 
 def open_file_dialog():
     root = tk.Tk()
@@ -105,3 +119,5 @@ filepath = open_file_dialog()
 if filepath:
     run(filepath)
 input("\nPress Enter to Close")
+
+#Known Programming Language Interpreter - Copyright Jacob Anderson, 2025
