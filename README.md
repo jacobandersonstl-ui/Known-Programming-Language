@@ -8,6 +8,10 @@ I got the idea for the Known Programming Language after watching a YouTube video
 
 ---
 
+You will need Python 3.14.3 or newer. You will also need the Visual Studio Code extension, which has not yet been uploaded to this repo or been published publicly to VSCode. I recommend studying this documentation to learn synntax before making any scripts.
+
+---
+
 ## Output
 
 ```
